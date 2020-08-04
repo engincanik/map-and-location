@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   huawei_map: ^4.0.4+300
-  
+
 
 
   # The following adds the Cupertino Icons font to your application.

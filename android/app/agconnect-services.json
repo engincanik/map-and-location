@@ -1,0 +1,12 @@
+{
+	"client":{
+		"cp_id":"5190090000025620205",
+		"product_id":"736430079244589262",
+		"client_id":"421498976835994752",
+		"client_secret":"65867F76EABFB7C8994983EBA074C90601D6A53DCF8F980A95309516665817E7",
+		"app_id":"102674797",
+		"package_name":"com.engin.mapflutter",
+		"api_key":"CgB6e3x94aWvZtjZbS466O26n8uBXmEV5j6lscF3I5MJLEPEKjTtEDZKAWM7xWpQ0lmvmz2m5kAFTn0hhg96CAfA"
+	},
+	"configuration_version":"1.0"
+}

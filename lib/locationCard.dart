@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LocationCard extends StatelessWidget {
-  final String title;
-  final String motto;
-  final String address;
+  String title;
+  String motto;
+  String address;
 
   LocationCard({this.title, this.motto, this.address});
 

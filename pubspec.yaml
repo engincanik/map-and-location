@@ -24,6 +24,9 @@ dependencies:
   flutter:
     sdk: flutter
   huawei_map: ^4.0.4+300
+  huawei_location: ^4.0.4+300
+  get_it: ^4.0.4
+  auto_size_text: ^2.1.0
 
 
 

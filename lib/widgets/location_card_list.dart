@@ -8,20 +8,21 @@ import 'package:map_flutter/models/restaurant.dart';
 class CardList extends StatelessWidget {
   HuaweiMapController mapController;
   double _zoomMarker = 18;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 400,
       child: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: allRestaurants[0].length,
+        itemCount: allRestaurants.length,
         itemBuilder: (BuildContext context, int index) {
-          Restaurant currentLocationRes = allRestaurants[0][index];
+          Restaurant currentLocationRes = allRestaurants[index];
           return Container(
             child: InkWell(
               onTap: () {
                 CameraUpdate cameraUpdate =
-                CameraUpdate.newLatLngZoom(currentLocationRes.latLng, _zoomMarker);
+                    CameraUpdate.newLatLngZoom(currentLocationRes.latLng, _zoomMarker);
                 mapController.animateCamera(cameraUpdate);
               },
               child: LocationCard(

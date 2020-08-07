@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:huawei_location/location/fused_location_provider_client.dart';
+import 'package:huawei_location/location/hwlocation.dart';
+import 'package:huawei_location/location/location_request.dart';
+import 'package:huawei_location/permission/permission_handler.dart';
 import 'package:huawei_map/components/components.dart';
 import 'package:huawei_map/map.dart';
 import 'package:map_flutter/locationCard.dart';
@@ -25,10 +29,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   HuaweiMapController mapController;
-  List<Restaurant> restaurantList;
+  List<Restaurant> currentRestaurantList;
   List<LocationCard> locationList;
-  static const LatLng _center = const LatLng(41.027470, 28.99339);
-  static const double _zoom = 12;
+
+  //LatLng _center = const LatLng(41.027470, 28.99339);
+  LatLng _center;
+  static const double _zoom = 11;
   static const double _zoomMarker = 18;
 
   static const LatLng _location1 = const LatLng(41.036243, 28.981791);
@@ -41,25 +47,58 @@ class _HomeScreenState extends State<HomeScreen> {
     Marker(markerId: MarkerId("Location3"), position: _location3),
   };
 
+  PermissionHandler permissionHandler;
+  FusedLocationProviderClient locationProviderClient;
+  LocationRequest locationRequest;
+  HWLocation hwLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    locationProviderClient = FusedLocationProviderClient();
+    permissionHandler = PermissionHandler();
+    locationRequest = LocationRequest();
+    getLastLocationWithAddress();
+  }
+
+  void getLastLocationWithAddress() async {
+    try {
+      locationRequest.needAddress = true;
+      hwLocation = await locationProviderClient.getLastLocationWithAddress(locationRequest);
+      _center = LatLng(hwLocation.latitude, hwLocation.longitude);
+      setState(() {
+        getList();
+      });
+    } catch (e) {
+      setState(() {});
+    }
+  }
+
   Set<Marker> getMarkers() {
-    for (Restaurant restaurant in allRestaurants[0]) {
-      print(restaurant.latLng.lng);
-      LatLng _location = LatLng(restaurant.latLng.lat, restaurant.latLng.lng);
-      Marker marker = Marker(markerId: MarkerId("Location1"), position: _location);
-      _nMarkers.add(marker);
+    for (Restaurant restaurant in currentRestaurantList) {
+      print("Res: " + restaurant.county + " , HW: " + hwLocation.county);
+      if (hwLocation.county == restaurant.county) {
+        LatLng _location = LatLng(restaurant.latLng.lat, restaurant.latLng.lng);
+        Marker marker = Marker(markerId: MarkerId("Location1"), position: _location);
+        _nMarkers.add(marker);
+      }
     }
     return _nMarkers;
   }
 
   void getList() {
-    restaurantList = allRestaurants[0];
-    for (Restaurant restaurantItem in restaurantList) {
-      locationList[restaurantList.indexOf(restaurantItem)].title =
-          restaurantItem.title;
-      locationList[restaurantList.indexOf(restaurantItem)].motto =
-          restaurantItem.motto;
-      locationList[restaurantList.indexOf(restaurantItem)].address =
-          restaurantItem.address;
+    currentRestaurantList = [];
+    for (Restaurant restaurantItem in allRestaurants) {
+      print("City: " + restaurantItem.county);
+      if (hwLocation != null) {
+        if (hwLocation.county == restaurantItem.county) {
+          print("hwLocation is not null");
+          currentRestaurantList.add(restaurantItem);
+          print("List: " + currentRestaurantList.length.toString());
+        }
+      } else {
+        print("hwLocation is null");
+      }
     }
   }
 
@@ -68,8 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void routeToMyLocation() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MyLocation()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MyLocation()));
   }
 
   @override
@@ -121,16 +159,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 400,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: allRestaurants[0].length,
+                        itemCount: currentRestaurantList.length,
                         itemBuilder: (BuildContext context, int index) {
-                          Restaurant currentLocationRes =
-                              allRestaurants[0][index];
+                          Restaurant currentLocationRes = currentRestaurantList[index];
                           return Container(
                             child: InkWell(
                               onTap: () {
-                                CameraUpdate cameraUpdate =
-                                    CameraUpdate.newLatLngZoom(
-                                        currentLocationRes.latLng, _zoomMarker);
+                                CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(
+                                    currentLocationRes.latLng, _zoomMarker);
                                 mapController.animateCamera(cameraUpdate);
                               },
                               child: LocationCard(

@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:huawei_map/components/cameraUpdate.dart';
-import 'package:huawei_map/map.dart';
+//import 'package:huawei_map/components/cameraUpdate.dart';
+//import 'package:huawei_map/map.dart';
 import 'package:map_flutter/locationCard.dart';
 import 'package:map_flutter/models/restaurant.dart';
 
 class CardList extends StatelessWidget {
-  HuaweiMapController mapController;
-  double _zoomMarker = 18;
+//  final HuaweiMapController mapController;
+//  final double _zoomMarker = 18;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,9 @@ class CardList extends StatelessWidget {
           return Container(
             child: InkWell(
               onTap: () {
-                CameraUpdate cameraUpdate =
-                    CameraUpdate.newLatLngZoom(currentLocationRes.latLng, _zoomMarker);
-                mapController.animateCamera(cameraUpdate);
+//                CameraUpdate cameraUpdate =
+//                    CameraUpdate.newLatLngZoom(currentLocationRes.latLng, _zoomMarker);
+//                mapController.animateCamera(cameraUpdate);
               },
               child: LocationCard(
                 title: currentLocationRes.title,

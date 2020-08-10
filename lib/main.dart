@@ -8,7 +8,7 @@ import 'package:huawei_map/map.dart';
 import 'package:map_flutter/locationCard.dart';
 import 'package:map_flutter/models/restaurant.dart';
 import 'package:map_flutter/screens/my_location_screen.dart';
-import 'package:map_flutter/widgets/location_card_list.dart';
+import 'package:map_flutter/screens/restaurant_detail_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -37,15 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
   static const double _zoom = 11;
   static const double _zoomMarker = 18;
 
-  static const LatLng _location1 = const LatLng(41.036243, 28.981791);
-  static const LatLng _location2 = const LatLng(41.029438, 28.975398);
-  static const LatLng _location3 = const LatLng(41.032481, 28.975727);
+//  static const LatLng _location1 = const LatLng(41.036243, 28.981791);
+//  static const LatLng _location2 = const LatLng(41.029438, 28.975398);
+//  static const LatLng _location3 = const LatLng(41.032481, 28.975727);
   Set<Marker> _nMarkers = {};
-  Set<Marker> _markers = {
-    Marker(markerId: MarkerId("Location1"), position: _location1),
-    Marker(markerId: MarkerId("Location2"), position: _location2),
-    Marker(markerId: MarkerId("Location3"), position: _location3),
-  };
+
+//  Set<Marker> _markers = {
+//    Marker(markerId: MarkerId("Location1"), position: _location1),
+//    Marker(markerId: MarkerId("Location2"), position: _location2),
+//    Marker(markerId: MarkerId("Location3"), position: _location3),
+//  };
 
   PermissionHandler permissionHandler;
   FusedLocationProviderClient locationProviderClient;
@@ -64,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void getLastLocationWithAddress() async {
     try {
       locationRequest.needAddress = true;
+      print("get last location self made");
       hwLocation = await locationProviderClient.getLastLocationWithAddress(locationRequest);
       _center = LatLng(hwLocation.latitude, hwLocation.longitude);
       setState(() {
@@ -141,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   zoomControlsEnabled: false,
                   rotateGesturesEnabled: true,
                   myLocationButtonEnabled: false,
-                  myLocationEnabled: false,
+                  myLocationEnabled: true,
                   trafficEnabled: false,
                   markers: getMarkers(),
                 ),
@@ -156,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      height: 400,
+                      height: 420,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: currentRestaurantList.length,
@@ -165,9 +167,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           return Container(
                             child: InkWell(
                               onTap: () {
-                                CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(
-                                    currentLocationRes.latLng, _zoomMarker);
-                                mapController.animateCamera(cameraUpdate);
+//                                CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(
+//                                    currentLocationRes.latLng, _zoomMarker);
+//                                mapController.animateCamera(cameraUpdate);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RestaurantDetailScreen(
+                                      currentRestaurantList[index],
+                                      LatLng(hwLocation.latitude, hwLocation.longitude),
+                                    ),
+                                  ),
+                                );
                               },
                               child: LocationCard(
                                 title: currentLocationRes.title,
@@ -179,10 +190,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     ),
-                    RaisedButton(
-                      onPressed: routeToMyLocation,
-                      child: Text("Go to My Location Page"),
-                    ),
+//                    RaisedButton(
+//                      onPressed: routeToMyLocation,
+//                      child: Text("Go to My Location Page"),
+//                    ),
                   ],
                 ),
               ),
